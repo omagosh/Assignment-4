@@ -1,13 +1,86 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int extraMemoryAllocated;
+
+// implement merge sort
+
+void swap(int* a, int* b)
+{
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void merge(int arr[], int left, int mid, int right)
+{
+	int i, j, k;
+
+	int n1 = mid - left + 1;
+	int n2 = right - mid;
+
+	int* L = (int*)malloc(n1 * sizeof(int));
+	int* R = (int*)malloc(n2 * sizeof(int));
+
+	for (i = 0; i < n1; i++)
+		L[i] = arr[left + i];
+
+	for (j = 0; j < n2; j++)
+		R[j] = arr[mid + j + 1];
+
+	j = 0;
+	i = 0;
+	k = left;
+
+	while (i < n1 && j < n2)
+	{
+		if (L[i] <= R[j])
+		{
+			arr[k] = L[i];
+			i++;
+		}
+		else
+		{
+			arr[k] = R[j];
+			j++;
+		}
+		k++;
+	}
+
+	while (i < n1)
+	{
+		arr[k] = L[i];
+		i++;
+		k++;
+	}
+
+	while (j < n2)
+	{
+		arr[k] = R[j];
+		j++;
+		k++;
+	}
+
+	free(L);
+	free(R);
+
+}
 
 // implement merge sort
 // extraMemoryAllocated counts bytes of extra memory allocated
 void mergeSort(int pData[], int l, int r)
 {
+	if (l < r)
+	{
+		int mid = (l + r) / 2;
+
+		mergeSort(pData, l, mid);
+		mergeSort(pData, mid + 1, r);
+
+		merge(pData, l, mid, r);
+	}
 	
 }
 
@@ -15,20 +88,53 @@ void mergeSort(int pData[], int l, int r)
 // extraMemoryAllocated counts bytes of memory allocated
 void insertionSort(int* pData, int n)
 {
-	
+		for (int i = 1; i < n; i++)
+	{
+		int curr_ele = pData[i];
+		int j = i - 1;
+		while (j >= 0 && pData[j] > curr_ele)
+		{
+			pData[j + 1] = pData[j];
+			j = j - 1;
+		}
+		pData[j + 1] = curr_ele;
+	}
+	extraMemoryAllocated += sizeof(int);
 }
 
 // implement bubble sort
 // extraMemoryAllocated counts bytes of extra memory allocated
 void bubbleSort(int* pData, int n)
 {
-	
+		for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = 0; j < n - i - 1; j++)
+		{
+			if (pData[j] > pData[j + 1])
+			{
+				int tmp = pData[j];
+				pData[j] = pData[j + 1];
+				pData[j + 1] = tmp;
+			}
+		}
+	}
 }
 
 // implement selection sort
 // extraMemoryAllocated counts bytes of extra memory allocated
 void selectionSort(int* pData, int n)
 {
+	int min_idx;
+	for (int i = 0; i < n - 1; i++)
+	{
+		min_idx = i;
+		for (int j = i + 1; j < n; j++)
+		{
+			if (pData[j] < pData[min_idx])
+				min_idx = j;
+		}
+		swap(&pData[min_idx], &pData[i]);
+	}
 	
 }
 

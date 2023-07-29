@@ -144,12 +144,26 @@ int parseData(char *inputFileName, int **ppData)
 	FILE* inFile = fopen(inputFileName,"r");
 	int dataSz = 0;
 	*ppData = NULL;
+	int i, n, *data;
 	
 	if (inFile)
 	{
 		fscanf(inFile,"%d\n",&dataSz);
 		*ppData = (int *)malloc(sizeof(int) * dataSz);
 		// Implement parse data block
+		if (*ppData == NULL)
+		{
+			printf("Cannot allocate memory\n");
+			exit(-1);
+		}
+		for (i=0;i<dataSz;++i)
+		{
+			fscanf(inFile, "%d ",&n);
+			data = *ppData + i;
+			*data = n;
+		}
+
+		fclose(inFile);
 	}
 	
 	return dataSz;
